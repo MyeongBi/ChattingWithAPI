@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1004005031724",
+    "firebase_url": "https://chattingwithapi-default-rtdb.firebaseio.com",
+    "project_id": "chattingwithapi",
+    "storage_bucket": "chattingwithapi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004005031724:android:0a853a03420e6464b7f689",
+        "android_client_info": {
+          "package_name": "com.example.chattingwithapi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1004005031724-kv5nn4c5ce2oo7di1ihq1i8lk7gsp734.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUbDYSTlRzFqHko4TNpfyzeC3RaRArDK4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1004005031724-kv5nn4c5ce2oo7di1ihq1i8lk7gsp734.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
