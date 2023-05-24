@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chattingwithapi.databinding.ChatroomActivityBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -106,6 +107,7 @@ class ChatRoomActivity : AppCompatActivity() {
                 }.addOnCanceledListener {
                     Log.i("putMessage", "메시지 전송에 실패하였습니다")
                 }
+
         } catch (e: Exception) {
             e.printStackTrace()
             Log.i("putMessage", "메시지 전송 중 오류가 발생하였습니다.")

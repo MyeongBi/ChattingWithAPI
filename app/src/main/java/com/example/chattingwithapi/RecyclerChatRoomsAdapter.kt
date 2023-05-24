@@ -37,7 +37,7 @@ class RecyclerChatRoomsAdapter(val context: Context) :
             .orderByChild("users/$myUid").equalTo(true)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {}
-                override fun onDataChange(snapshot: DataSnapshot) {
+                override fun onDataChange(snapshot: DataSnapshot) {//채팅방 목록 불러오기
                     chatRooms.clear()
                     for (data in snapshot.children) {
                         val chatRoom = data.getValue(ChatRoom::class.java) as ChatRoom

@@ -3,8 +3,11 @@ package com.example.chattingwithapi
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Button
 import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +19,17 @@ import com.example.chattingwithapi.LoginActivity
 import com.example.chattingwithapi.AddChatRoomActivity
 import com.example.chattingwithapi.databinding.MainActivityBinding
 import com.example.chattingwithapi.ChatRoom
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.jsoup.nodes.Document
+import org.jsoup.Jsoup
+import org.jsoup.Connection
+import org.jsoup.nodes.Element
+import android.os.Message
+import android.util.Log
+import java.io.IOException
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity() {
@@ -32,7 +46,71 @@ class MainActivity : AppCompatActivity() {
         initializeView()
         initializeListener()
         setupRecycler()
+
+        val url = "https://lms.mju.ac.kr/ilos/main/main_form.acl"
+
+        Thread {
+            try {
+                // 크롤링 작업 실행
+                val divText = performLoginAndCrawling()
+
+
+                // UI 업데이트 작업
+                runOnUiThread {
+                    if(divText != null)
+                        Log.e("test", divText)
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }.start()
     }
+
+    fun performLoginAndCrawling(): String? {
+        val loginUrl = "https://sso1.mju.ac.kr/login.do?redirect_uri=https://lms.mju.ac.kr/ilos/bandi/sso/index.jsp"
+        val mainUrl = "https://lms.mju.ac.kr/ilos/main/main_form.acl"
+        val username = "60182142"
+        val userpassword = "!@QWEasdzxc1"
+
+        try {
+            // 로그인 폼 전송
+            val loginResponse: Connection.Response = Jsoup.connect(loginUrl)
+                .data("id", username)
+                .data("passwrd", userpassword)
+                .method(Connection.Method.POST)
+                .execute()
+          //  Log.e("connectioncode", loginResponse.statusCode().toString())
+            val cookies = loginResponse.cookies()
+
+            // redirect 된 페이지에 접속하여 크롤링 또는 스크래핑 작업 수행
+            val mainPageResponse: Connection.Response = Jsoup.connect(mainUrl)
+                .cookies(cookies)
+                .execute()
+           // Log.e("mainpageconnectioncode", mainPageResponse.statusCode().toString())
+            val mainPageDoc: Document = mainPageResponse.parse()
+
+            // 추가적인 크롤링 또는 스크래핑 작업 수행
+            val divText = mainPageDoc.selectFirst("div.m-box2 ol li em.sub_open")?.text() // 예시: 특정 div 요소의 텍스트 가져오기
+
+            // 결과 출력
+            if (divText != null) {
+                return divText
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+
+
+
+
+
+
+
+
+
 
     fun initializeView() { //뷰 초기화
         try {
@@ -40,6 +118,15 @@ class MainActivity : AppCompatActivity() {
             btnSignout = binding.btnSignout
             btnAddchatRoom = binding.btnNewMessage
             recycler_chatroom = binding.recyclerChatrooms
+
+            val handler = object : Handler(Looper.getMainLooper()) {
+                override fun handleMessage(msg: Message) {
+                    val bundle = msg.data // new Thread에서 작업한 결과물 받기
+                    bundle.getString("message")?.let { Log.e("testString", it) }
+                }
+            }
+
+
         }catch (e:Exception)
         {
             e.printStackTrace()
