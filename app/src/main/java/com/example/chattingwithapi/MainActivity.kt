@@ -69,8 +69,8 @@ class MainActivity : AppCompatActivity() {
     fun performLoginAndCrawling(): String? {
         val loginUrl = "https://sso1.mju.ac.kr/login.do?redirect_uri=https://lms.mju.ac.kr/ilos/bandi/sso/index.jsp"
         val mainUrl = "https://lms.mju.ac.kr/ilos/main/main_form.acl"
-        val username = "60182142"
-        val userpassword = "!@QWEasdzxc1"
+        val username = ""
+        val userpassword = ""
 
         try {
             // 로그인 폼 전송
