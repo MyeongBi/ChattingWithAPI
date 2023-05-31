@@ -125,45 +125,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.205" />
 
-        <LinearLayout
-            android:id="@+id/menu"
-            android:layout_width="329dp"
-            android:layout_height="715dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <Button
-                android:id="@+id/button"
-                android:layout_width="67dp"
-                android:layout_height="wrap_content"
-                android:text="Button" />
-
-            <EditText
-                android:id="@+id/edtfind"
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                app:layout_constraintBottom_toTopOf="@+id/recyclerPeoples"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.372"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                app:layout_constraintVertical_bias="0.037" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_peoples"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                tools:listitem="@layout/list_person_item" />
-        </LinearLayout>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_messages"
             android:layout_width="match_parent"
@@ -176,9 +137,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2"
-            tools:listitem="@layout/list_talk_item_mine" >
+            tools:listitem="@layout/list_talk_item_mine">
 
         </androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+            android:id="@+id/menubar"
+            android:layout_width="305dp"
+            android:layout_height="669dp"
+            android:layout_marginStart="68dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/recycler_messages"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            tools:context=".AddFriendDialog">
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

@@ -47,14 +47,6 @@ class MainActivity : AppCompatActivity() {
             btnAddchatRoom = binding.btnNewMessage
             recycler_chatroom = binding.recyclerChatrooms
 
-            val handler = object : Handler(Looper.getMainLooper()) {
-                override fun handleMessage(msg: Message) {
-                    val bundle = msg.data // new Thread에서 작업한 결과물 받기
-                    bundle.getString("message")?.let { Log.e("testString", it) }
-                }
-            }
-
-
         }catch (e:Exception)
         {
             e.printStackTrace()

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chattingwithapi.databinding.ListPersonItemBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -13,11 +14,14 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class RecyclerUsersAdapter(val context: Context) :
+class RecyclerUsersAdapter(val context: Context, val onUserClickListener: OnUserClickListener) :
     RecyclerView.Adapter<RecyclerUsersAdapter.ViewHolder>() {
     var users: ArrayList<User> =arrayListOf()        //검색어로 일치한 사용자 목록
     val allUsers: ArrayList<User> =arrayListOf()    //전체 사용자 목록
     lateinit var currnentUser: User
+    interface OnUserClickListener {
+        fun onUserClick(user: User)
+    }
 
     init {
         setupAllUserList()
@@ -63,59 +67,102 @@ class RecyclerUsersAdapter(val context: Context) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.txt_name.text= users[position].name
-        holder.txt_email.text= users[position].email
+        holder.txt_name.text = users[position].name
+        holder.txt_email.text = users[position].email
 
-        holder.background.setOnClickListener()
-        {
-            addChatRoom(position)        //해당 사용자 선택 시
+        holder.background.setOnClickListener {
+            if (context is AddChatRoomActivity) {
+                addChatRoom(position) // AddChatRoomActivity에서 사용할 경우
+            } else {
+                onUserClickListener.onUserClick(users[position]) // DialogFragment에서 사용할 경우
+            } //해당 사용자 선택 시
         }
     }
 
-    fun addChatRoom(position: Int) {     //채팅방 추가
-        val opponent = users[position]   //채팅할 상대방 정보
-        var database = FirebaseDatabase.getInstance().getReference("ChatRoom")    //넣을 database reference 세팅
-        var chatRoom = ChatRoom(         //추가할 채팅방 정보 세팅
+
+    fun addChatRoom(position: Int) {
+        val opponent = users[position]
+        val database = FirebaseDatabase.getInstance().getReference("ChatRoom")
+        val chatRoom = ChatRoom(
             mapOf(currnentUser.uid!! to true, opponent.uid!! to true),
             null
         )
-        var myUid = FirebaseAuth.getInstance().uid//내 Uid
-        database.child("chatRooms")
-            .orderByChild("users/${opponent.uid}").equalTo(true)       //상대방 Uid가 포함된 채팅방이 있는 지 확인
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {}
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.value== null) {              //채팅방이 없는 경우
-                        database.child("chatRooms").push().setValue(chatRoom).addOnSuccessListener{// 채팅방 새로 생성 후 이동
-                            goToChatRoom(chatRoom, opponent)
-                        }
-                    } else {
-                        context.startActivity(Intent(context, MainActivity::class.java))
-                        goToChatRoom(chatRoom, opponent)                    //해당 채팅방으로 이동
-                    }
+        val myUid = FirebaseAuth.getInstance().uid
 
+        database.child("chatRooms")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    // Handle onCancelled
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    var existingChatRoom: ChatRoom? = null
+                    var chatRoomId: String? = null
+                    for (childSnapshot in snapshot.children) {
+                        val roomId = childSnapshot.key as String
+                        val room = childSnapshot.getValue(ChatRoom::class.java)
+                        if (room != null && room.users.containsKey(myUid) && room.users.containsKey(opponent.uid)) {
+                            existingChatRoom = room
+                            chatRoomId = roomId
+                            break
+                        }
+                    }
+                    if (existingChatRoom != null && chatRoomId != null) {
+                        goToChatRoom(existingChatRoom, opponent, chatRoomId)
+                    } else {
+                        createNewChatRoom(chatRoom, opponent)
+                    }
                 }
             })
     }
 
-    fun goToChatRoom(chatRoom: ChatRoom, opponentUid: User) {       //채팅방으로 이동
-        var intent = Intent(context, ChatRoomActivity::class.java)
-        intent.putExtra("ChatRoom", chatRoom)       //채팅방 정보
-        intent.putExtra("Opponent", opponentUid)    //상대방 정보
-        intent.putExtra("ChatRoomKey", "")   //채팅방 키
+    private fun createNewChatRoom(chatRoom: ChatRoom, opponent: User) {
+        val database = FirebaseDatabase.getInstance().getReference("ChatRoom")
+        val newChatRoomRef = database.child("chatRooms").push()
+        newChatRoomRef.setValue(chatRoom)
+            .addOnSuccessListener {
+                val chatRoomId = newChatRoomRef.key
+                if (chatRoomId != null) {
+                    goToChatRoom(chatRoom, opponent, chatRoomId)
+                }
+            }
+            .addOnFailureListener { exception ->
+                // Handle failure to create a new chat room
+            }
+    }
+
+    private fun goToChatRoom(chatRoom: ChatRoom, opponent: User, chatRoomId: String) {
+        val intent = Intent(context, ChatRoomActivity::class.java)
+        intent.putExtra("ChatRoom", chatRoom)
+        intent.putExtra("Opponent", opponent)
+        intent.putExtra("ChatRoomKey", chatRoomId)
         context.startActivity(intent)
         (context as AppCompatActivity).finish()
     }
 
+
     override fun getItemCount(): Int {
         return users.size
     }
+
+
 
     inner class ViewHolder(itemView: ListPersonItemBinding) :
         RecyclerView.ViewHolder(itemView.root) {
         var background = itemView.background
         var txt_name = itemView.txtName
         var txt_email = itemView.txtEmail
+
+        init {
+            background.isClickable = true
+            background.setOnClickListener {
+                if (context is AddChatRoomActivity) {
+                    addChatRoom(adapterPosition)        // AddChatRoomActivity에서 사용할 경우
+                } else if (context is DialogFragment) {
+                    onUserClickListener.onUserClick(users[adapterPosition]) // DialogFragment에서 사용할 경우
+                }        //해당 사용자 선택 시
+            }
+        }
     }
 
 }

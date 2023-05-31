@@ -23,7 +23,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            tools:listitem="@layout/list_person_item" />
+            tools:listitem="@layout/list_chatroom_item" />
 
         <TextView
             android:id="@+id/textView"
@@ -55,9 +55,10 @@
             android:layout_height="170dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.46"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintVertical_bias="0.2"
+            app:layout_constraintVertical_bias="0.073"
             tools:listitem="@layout/list_person_item" />
 
         <ImageButton

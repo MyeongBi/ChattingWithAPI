@@ -59,7 +59,8 @@ class RecyclerChatRoomsAdapter(val context: Context) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var userIdList = chatRooms[position].users!!.keys    //채팅방에 포함된 사용자 키 목록
         var opponent = userIdList.first { !it.equals(myUid) }  //상대방 사용자 키
-        FirebaseDatabase.getInstance().getReference("User").child("users").orderByChild("uid")   //상대방 사용자 키를 포함하는 채팅방 불러오기
+        FirebaseDatabase.getInstance().getReference("User").child("users")
+            .orderByChild("uid")
             .equalTo(opponent)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {}
@@ -67,7 +68,7 @@ class RecyclerChatRoomsAdapter(val context: Context) :
                     for (data in snapshot.children) {
                         holder.chatRoomKey = data.key.toString()!!             //채팅방 키 초기화
                         holder.opponentUser = data.getValue(User::class.java)!!         //상대방 정보 초기화
-                        holder.txt_name.text = data.getValue(User::class.java)!! .name.toString()     //상대방 이름 초괴화
+                        holder.txt_name.text = data.getValue(User::class.java)!!.name.toString()     //상대방 이름 초기화
                     }
                 }
             })

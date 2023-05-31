@@ -19,6 +19,7 @@ class AddChatRoomActivity : AppCompatActivity() {
     lateinit var edt_opponent: EditText
     lateinit var firebaseDatabase: DatabaseReference
     lateinit var recycler_people: RecyclerView
+    lateinit var recycler_chatrooms: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +36,7 @@ class AddChatRoomActivity : AppCompatActivity() {
         btn_exit = binding.imgbtnBack
         edt_opponent = binding.edtOpponentName
         recycler_people = binding.recyclerPeoples
+        recycler_chatrooms = binding.recyclerChatrooms
     }
     fun initializeListener()   //버튼 클릭 시 리스너 초기화
     {
@@ -60,6 +62,13 @@ class AddChatRoomActivity : AppCompatActivity() {
     fun setupRecycler()   //사용자 목록 초기화 및 업데이트
     {
         recycler_people.layoutManager = LinearLayoutManager(this)
-        recycler_people.adapter = RecyclerUsersAdapter(this)
+        recycler_people.adapter = RecyclerUsersAdapter(this, object : RecyclerUsersAdapter.OnUserClickListener{
+            override fun onUserClick(user: User) {
+
+            }
+        })
+
+        recycler_chatrooms.layoutManager = LinearLayoutManager(this)
+        recycler_chatrooms.adapter = RecyclerChatRoomsAdapter(this)
     }
 }

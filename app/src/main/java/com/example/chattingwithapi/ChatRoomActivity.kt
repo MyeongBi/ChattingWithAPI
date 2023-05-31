@@ -19,13 +19,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chattingwithapi.databinding.ChatroomActivityBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import org.w3c.dom.Text
-import android.widget.Toast
-import io.socket.client.IO
-import io.socket.client.Socket
-import io.socket.emitter.Emitter
-import org.json.JSONObject
-import java.net.URISyntaxException
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -44,10 +37,7 @@ class ChatRoomActivity : AppCompatActivity() {
     lateinit var opponentUser: User
     lateinit var chatRoomKey: String
     lateinit var myUid: String
-    lateinit var btn_notice: Button
-    lateinit var recycler_people: RecyclerView
-    lateinit var find_people: EditText
-    private lateinit var menuLayout: LinearLayout
+    lateinit var btn_menu: Button
     var notice: TextView? = null
     private var isMenuVisible = false
 
@@ -84,9 +74,7 @@ class ChatRoomActivity : AppCompatActivity() {
         btn_submit = binding.btnSubmit
         txt_title = binding.txtTItle
         txt_title.text = opponentUser!!.name ?: ""
-        btn_notice = binding.getnotice
-        recycler_people = binding.recyclerPeoples
-        find_people = binding.edtfind
+        btn_menu = binding.getnotice
     }
 
     fun initializeListener() {   //버튼 클릭 시 리스너 초기화
@@ -98,41 +86,14 @@ class ChatRoomActivity : AppCompatActivity() {
         {
             putMessage()
         }
-        btn_notice.setOnClickListener(){
-            toggleMenuVisibility()
-        }
-        find_people.addTextChangedListener(object :
-            TextWatcher                  //검색 창에 입력된 글자가 변경될 때마다 검색 내용 업데이트
-        {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                var adapter = recycler_people.adapter as RecyclerUsersAdapter
-                adapter.searchItem(s.toString())                  //입력된 검색어로 검색 진행 및 업데이트
-            }
-        })
-    }
-    private fun toggleMenuVisibility() {
-        if (isMenuVisible) {
-            hideMenu()
-        } else {
-            showMenu()
+        btn_menu.setOnClickListener() {
+            val addFriendDialogFragment = AddFriendDialogFragment(chatRoomKey)
+            addFriendDialogFragment.show(supportFragmentManager, "addFriendDialog")
         }
     }
 
-    private fun showMenu() {
-        menuLayout.visibility = View.VISIBLE
-        isMenuVisible = true
-    }
 
-    private fun hideMenu() {
-        menuLayout.visibility = View.GONE
-        isMenuVisible = false
-    }
+
 
     fun setupChatRooms() {              //채팅방 목록 초기화 및 표시
         if (chatRoomKey.isNullOrBlank())
@@ -191,9 +152,6 @@ class ChatRoomActivity : AppCompatActivity() {
     fun setupRecycler() {            //목록 초기화 및 업데이트
         recycler_talks.layoutManager = LinearLayoutManager(this)
         recycler_talks.adapter = RecyclerMessagesAdapter(this, chatRoomKey, opponentUser.uid)
-
-        recycler_people.layoutManager = LinearLayoutManager(this)
-        recycler_people.adapter = RecyclerUsersAdapter(this)
     }
 
 //    override fun onDataReceived(divText1: String?, divText2: String?) {
