@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ChattingWithAPI</string>
+    <string name="my_notification_channel_id">your_channel_id_here</string>
 </resources>

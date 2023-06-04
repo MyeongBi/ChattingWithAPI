@@ -24,7 +24,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-@RequiresApi(Build.VERSION_CODES.O)
 class ChatRoomActivity : AppCompatActivity() {
     lateinit var binding: ChatroomActivityBinding
     lateinit var btn_exit: ImageButton
@@ -38,15 +37,6 @@ class ChatRoomActivity : AppCompatActivity() {
     lateinit var chatRoomKey: String
     lateinit var myUid: String
     lateinit var btn_menu: Button
-    var notice: TextView? = null
-    private var isMenuVisible = false
-
-
-    //var url = "http://172.20.10.11:5000/crawl"
-    //private val SERVER_URL = "http://172.20.10.11:5000"
-    //private val TAG = "ChatRoomActivity"
-
-   // private lateinit var socket: Socket
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -154,14 +144,5 @@ class ChatRoomActivity : AppCompatActivity() {
         recycler_talks.adapter = RecyclerMessagesAdapter(this, chatRoomKey, opponentUser.uid)
     }
 
-//    override fun onDataReceived(divText1: String?, divText2: String?) {
-//        // divText1, divText2 변수에 서버에서 받은 데이터가 들어옵니다.
-//        // 필요한 로직을 구현하여 데이터를 처리해주세요.
-//        // 예를 들어, 텍스트를 TextView에 설정하는 경우:
-//        Log.e("testString", divText1.toString())
-//        Log.e("testString", divText2.toString())
-//        runOnUiThread {
-//            notice?.text = divText1
-//        }
-//    }
+
 }

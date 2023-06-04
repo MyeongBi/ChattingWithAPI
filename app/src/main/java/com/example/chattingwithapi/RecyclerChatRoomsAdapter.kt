@@ -57,42 +57,65 @@ class RecyclerChatRoomsAdapter(val context: Context) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var userIdList = chatRooms[position].users!!.keys    //채팅방에 포함된 사용자 키 목록
-        var opponent = userIdList.first { !it.equals(myUid) }  //상대방 사용자 키
+        val userIdList = chatRooms[position].users!!.keys    // 채팅방에 포함된 사용자 키 목록
+        val myUid = myUid // 여기에 자신의 UID를 입력해주세요
+        val opponentUids = userIdList.filter { it != myUid }  // 상대방 사용자 키들
+
         FirebaseDatabase.getInstance().getReference("User").child("users")
             .orderByChild("uid")
-            .equalTo(opponent)
+            .equalTo(opponentUids[0])
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {}
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (data in snapshot.children) {
-                        holder.chatRoomKey = data.key.toString()!!             //채팅방 키 초기화
-                        holder.opponentUser = data.getValue(User::class.java)!!         //상대방 정보 초기화
-                        holder.txt_name.text = data.getValue(User::class.java)!!.name.toString()     //상대방 이름 초기화
+                        holder.chatRoomKey = data.key.toString()  // 채팅방 키 초기화
+                        holder.opponentUser = data.getValue(User::class.java)!!  // 상대방 정보 초기화
+                        holder.txt_name.text = data.getValue(User::class.java)?.name.toString()  // 상대방 이름 초기화
+
+                        // 채팅방에 참여하는 사용자들의 이름 표시
+                        if (opponentUids.size > 1) {
+                            holder.txt_name.append(", ...")  // 3명 이상인 경우 "..." 추가
+
+                            for (i in 1 until minOf(opponentUids.size, 4)) {
+                                val uid = opponentUids[i]
+                                FirebaseDatabase.getInstance().getReference("User").child("users")
+                                    .orderByChild("uid")
+                                    .equalTo(uid)
+                                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                                        override fun onCancelled(error: DatabaseError) {}
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            for (data in snapshot.children) {
+                                                val username = data.getValue(User::class.java)?.name.toString()
+                                                holder.txt_name.append(", $username")
+                                            }
+                                        }
+                                    })
+                            }
+                        }
                     }
                 }
             })
-        holder.background.setOnClickListener()               //채팅방 항목 선택 시
-        {
+
+        holder.background.setOnClickListener() {               // 채팅방 항목 선택 시
             try {
-                var intent = Intent(context, ChatRoomActivity::class.java)
-                intent.putExtra("ChatRoom", chatRooms.get(position))      //채팅방 정보
-                intent.putExtra("Opponent", holder.opponentUser)          //상대방 사용자 정보
-                intent.putExtra("ChatRoomKey", chatRoomKeys[position])     //채팅방 키 정보
-                context.startActivity(intent)                            //해당 채팅방으로 이동
+                val intent = Intent(context, ChatRoomActivity::class.java)
+                intent.putExtra("ChatRoom", chatRooms[position])  // 채팅방 정보
+                intent.putExtra("Opponent", holder.opponentUser)  // 상대방 사용자 정보
+                intent.putExtra("ChatRoomKey", chatRoomKeys[position])  // 채팅방 키 정보
+                context.startActivity(intent)  // 해당 채팅방으로 이동
                 (context as AppCompatActivity).finish()
-            }catch (e:Exception)
-            {
+            } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(context,"채팅방 이동 중 문제가 발생하였습니다.",Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "채팅방 이동 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
             }
         }
 
-        if (chatRooms[position].messages!!.size > 0) {         //채팅방 메시지가 존재하는 경우
-            setupLastMessageAndDate(holder, position)        //마지막 메시지 및 시각 초기화
+        if (chatRooms[position].messages!!.isNotEmpty()) {  // 채팅방 메시지가 존재하는 경우
+            setupLastMessageAndDate(holder, position)  // 마지막 메시지 및 시각 초기화
             setupMessageCount(holder, position)
         }
     }
+
 
     fun setupLastMessageAndDate(holder: ViewHolder, position: Int) { //마지막 메시지 및 시각 초기화
         try {
