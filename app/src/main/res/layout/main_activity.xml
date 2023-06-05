@@ -6,62 +6,75 @@
     tools:override="true">
 
 
-    <data>
-    </data>
+    <data></data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <TextView
-            android:id="@+id/txt_TItle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="메시지"
-            android:textSize="18dp"
-            app:layout_constraintEnd_toStartOf="@+id/btn_new_message"
-            app:layout_constraintStart_toEndOf="@+id/btn_signout"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <Button
             android:id="@+id/btn_new_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
             android:text="새 메시지"
             android:textColor="#3F51B5"
             android:textSize="18dp"
             android:textStyle="normal"
-            app:layout_constraintBottom_toBottomOf="@+id/txt_TItle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/txt_TItle" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btn_signout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="28dp"
             android:background="@android:color/transparent"
             android:text="로그아웃"
             android:textColor="#8D8D8E"
             android:textSize="18dp"
             android:textStyle="normal"
-            app:layout_constraintBottom_toBottomOf="@+id/txt_TItle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/txt_TItle" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_chatrooms"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="40dp"
+            android:layout_width="414dp"
+            android:layout_height="636dp"
+            android:layout_marginTop="19dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.666"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_TItle"
-            tools:listitem="@layout/list_chatroom_item" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_marginBaseline="40dp"
+            tools:listitem="@layout/list_chatroom_item">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/btn_calender"
+            android:layout_width="125dp"
+            android:layout_height="37dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="28dp"
+            android:background="@android:color/transparent"
+            android:text="캘린더"
+            android:textColor="#3F51B5"
+            app:layout_constraintBottom_toTopOf="@+id/recycler_chatrooms"
+            app:layout_constraintEnd_toStartOf="@+id/btn_new_message"
+            app:layout_constraintHorizontal_bias="0.425"
+            app:layout_constraintStart_toEndOf="@+id/btn_signout"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

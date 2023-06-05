@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">ChattingWithAPI</string>
     <string name="my_notification_channel_id">your_channel_id_here</string>
+    <string name="title_memo">Memo</string>
+    <string name="title_calendar">Calendar</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="msg_not_memo">저장된 메모가 없습니다.</string>
 </resources>

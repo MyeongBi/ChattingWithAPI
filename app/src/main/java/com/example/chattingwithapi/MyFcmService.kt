@@ -13,14 +13,12 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import io.socket.client.IO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Date
-import io.socket.client.Socket
 
 
 class MyFcmService : FirebaseMessagingService() {
@@ -32,7 +30,7 @@ class MyFcmService : FirebaseMessagingService() {
 
     fun sendTokenToServer(token: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://220.121.88.61:8000/")
+            .baseUrl("http://192.168.0.98:8000/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -68,16 +66,14 @@ class MyFcmService : FirebaseMessagingService() {
 
     private fun showNotification(notification: RemoteMessage.Notification) {
         val intent = Intent(this, MainActivity::class.java)
-        val pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val channelId = getString(R.string.my_notification_channel_id)
 
         val notificationManager = NotificationManagerCompat.from(this)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, "알림", NotificationManager.IMPORTANCE_HIGH)
-            notificationManager.createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(channelId, "알림", NotificationManager.IMPORTANCE_HIGH)
+        notificationManager.createNotificationChannel(channel)
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
