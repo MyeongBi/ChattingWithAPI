@@ -1,5 +1,6 @@
 package com.example.chattingwithapi
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,6 +26,7 @@ class AddFriendDialogFragment(private val chatRoomId: String): DialogFragment() 
     private lateinit var findPeople: EditText
     private lateinit var btnExit: Button
     private lateinit var firebaseDatabase: DatabaseReference
+    private lateinit var fragmentContext: Context
 
     constructor(chatRoomId: String, otherParameter: String) : this(chatRoomId) {
         // 다른 파라미터에 대한 추가적인 초기화 작업 수행
@@ -72,6 +74,10 @@ class AddFriendDialogFragment(private val chatRoomId: String): DialogFragment() 
             }
         })
     }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        fragmentContext = context
+    }
 
     private fun setupRecycler() {
         recyclerPeople.layoutManager = LinearLayoutManager(requireContext())
@@ -86,14 +92,14 @@ class AddFriendDialogFragment(private val chatRoomId: String): DialogFragment() 
             }
         })
 
-
     }
+
     private fun addFriend(user: User) {
         val myUid = FirebaseAuth.getInstance().currentUser?.uid
         val friendUid = user.uid
 
-        val context = context
-        if (context != null && myUid != null && friendUid != null) {
+
+        if (fragmentContext != null && myUid != null && friendUid != null) {
             val currentUserRef = FirebaseDatabase.getInstance().getReference("User")
                 .child("users")
                 .child(myUid)
@@ -105,11 +111,11 @@ class AddFriendDialogFragment(private val chatRoomId: String): DialogFragment() 
             currentUserRef.child("friends").child(friendUid).setValue(true)
                 .addOnSuccessListener {
                     // 친구 추가 성공
-                    Toast.makeText(context, "친구 추가 성공", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(fragmentContext, "친구 추가 성공", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener { error ->
                     // 친구 추가 실패
-                    Toast.makeText(context, "친구 추가 실패", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(fragmentContext, "친구 추가 실패", Toast.LENGTH_SHORT).show()
                 }
 
             // 친구 정보에서 내 UID 추가
@@ -124,6 +130,7 @@ class AddFriendDialogFragment(private val chatRoomId: String): DialogFragment() 
                 }
         }
     }
+
 
 
 
