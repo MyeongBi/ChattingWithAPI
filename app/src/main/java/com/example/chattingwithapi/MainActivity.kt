@@ -22,6 +22,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var btnAddchatRoom: Button
     lateinit var btnSignout: Button
     lateinit var btnCalender: Button
+    lateinit var btnAddFriend: Button
+    lateinit var removeFriend: Button
+    lateinit var btnSet: Button
     lateinit var binding: MainActivityBinding
     lateinit var firebaseDatabase: DatabaseReference
     lateinit var recycler_chatroom: RecyclerView
@@ -114,6 +117,9 @@ class MainActivity : AppCompatActivity() {
             btnSignout = binding.btnSignout
             btnAddchatRoom = binding.btnNewMessage
             btnCalender = binding.btnCalender
+            btnAddFriend = binding.btnAddFriend
+            removeFriend = binding.btnRemoveFriend
+            btnSet = binding.btnSetting
             recycler_chatroom = binding.recyclerChatrooms
 
         }catch (e:Exception)
@@ -136,6 +142,21 @@ class MainActivity : AppCompatActivity() {
         btnCalender.setOnClickListener()
         {
             startActivity(Intent(this@MainActivity, CalenderActivity::class.java))
+            finish()
+        }
+        btnAddFriend.setOnClickListener()
+        {
+            val addFriendDialogFragment = AddFriendDialogFragment()
+            addFriendDialogFragment.show(supportFragmentManager, "addFriendDialog")
+        }
+        removeFriend.setOnClickListener()
+        {
+            val addFriendDialogFragment = AddFriendDialogFragment()
+            addFriendDialogFragment.show(supportFragmentManager, "addFriendDialog")
+        }
+        btnSet.setOnClickListener()
+        {
+            startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
             finish()
         }
     }

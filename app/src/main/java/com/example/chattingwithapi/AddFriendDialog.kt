@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,14 @@ class AddFriendDialogFragment(private val chatRoomId: String): DialogFragment() 
     private lateinit var btnExit: Button
     private lateinit var firebaseDatabase: DatabaseReference
 
+    constructor(chatRoomId: String, otherParameter: String) : this(chatRoomId) {
+        // 다른 파라미터에 대한 추가적인 초기화 작업 수행
+    }
+
+    // 생성자 2: chatRoomId 외에 다른 인자를 받지 않는 생성자
+    constructor() : this("defaultChatRoomId") {
+        // chatRoomId를 기본값으로 초기화하고, 다른 파라미터에 대한 추가적인 초기화 작업 수행
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.addfriend_activity, container, false)
@@ -67,12 +76,39 @@ class AddFriendDialogFragment(private val chatRoomId: String): DialogFragment() 
         recyclerPeople.layoutManager = LinearLayoutManager(requireContext())
         recyclerPeople.adapter = RecyclerUsersAdapter(requireContext(), object : RecyclerUsersAdapter.OnUserClickListener {
             override fun onUserClick(user: User) {
-                addUserToChatRoom(user)
+                if (chatRoomId == "defaultChatRoomId") {
+                    addFriend(user)
+                } else {
+                    addUserToChatRoom(user)
+                }
                 dismiss()
             }
         })
 
     }
+    private fun addFriend(user: User) {
+        val myUid = FirebaseAuth.getInstance().currentUser?.uid
+        val friendUid = user.uid
+
+        // 현재 사용자의 친구 목록에 선택한 사용자를 추가
+        val friendRef =
+            myUid?.let { FirebaseDatabase.getInstance().getReference("User").child("users").child(it).child("friends") }
+
+        if (friendUid != null) {
+            friendRef?.child(friendUid)?.setValue(true)?.addOnSuccessListener {
+                // 친구 추가 성공
+                // 여기서 필요한 UI 업데이트를 수행하거나 사용자에게 알림을 표시할 수 있습니다.
+                Toast.makeText(requireContext(), "친구 추가 성공", Toast.LENGTH_SHORT).show()
+            }?.addOnFailureListener { error ->
+                // 친구 추가 실패
+                // 실패 처리에 대한 로직을 추가할 수 있습니다.
+                Toast.makeText(requireContext(), "친구 추가 실패", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(requireContext(), "친구 추가 실패", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     private fun addUserToChatRoom(user: User) {
         val myUid = FirebaseAuth.getInstance().currentUser?.uid
@@ -85,6 +121,9 @@ class AddFriendDialogFragment(private val chatRoomId: String): DialogFragment() 
             userRef.setValue(true)
                 .addOnSuccessListener {
                     // 사용자가 채팅방에 추가되었음을 사용자에게 표시하거나 필요한 UI 업데이트를 수행하세요
+                    // 예를 들어, 채팅방에 사용자가 추가되었음을 Toast 메시지로 표시
+                    // 또는 채팅방에 사용자가 추가되었음을 알리는 알림을 표시
+                   // Toast.makeText(requireContext(), "User added to chat room", Toast.LENGTH_SHORT).show()
                     Log.e("AddFriendDialogFragment", "User added to chat room: ${user.uid}")
                 }
                 .addOnFailureListener { error ->

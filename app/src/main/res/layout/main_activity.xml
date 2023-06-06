@@ -19,11 +19,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="15dp"
             android:background="@android:color/transparent"
             android:text="새 메시지"
             android:textColor="#3F51B5"
             android:textSize="18dp"
             android:textStyle="normal"
+            app:layout_constraintBottom_toTopOf="@+id/recycler_chatrooms"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,47 +35,95 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="28dp"
+            android:layout_marginBottom="15dp"
             android:background="@android:color/transparent"
             android:text="로그아웃"
             android:textColor="#8D8D8E"
             android:textSize="18dp"
             android:textStyle="normal"
+            app:layout_constraintBottom_toTopOf="@+id/recycler_chatrooms"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_chatrooms"
-            android:layout_width="414dp"
-            android:layout_height="636dp"
+            android:layout_width="match_parent"
+            android:layout_height="576dp"
             android:layout_marginTop="19dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.666"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            app:layout_marginBaseline="40dp"
+            app:layout_constraintVertical_bias="0.595"
             tools:listitem="@layout/list_chatroom_item">
 
         </androidx.recyclerview.widget.RecyclerView>
 
         <Button
             android:id="@+id/btn_calender"
-            android:layout_width="125dp"
-            android:layout_height="37dp"
+            android:layout_width="63dp"
+            android:layout_height="49dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="40dp"
             android:layout_marginBottom="28dp"
             android:background="@android:color/transparent"
-            android:text="캘린더"
+            android:gravity="center"
+            android:radius="15dp"
+            android:text=""
             android:textColor="#3F51B5"
+            app:icon="@drawable/ic_baseline_calendar_today_24"
+            app:iconTint="#000000"
             app:layout_constraintBottom_toTopOf="@+id/recycler_chatrooms"
             app:layout_constraintEnd_toStartOf="@+id/btn_new_message"
-            app:layout_constraintHorizontal_bias="0.425"
+            app:layout_constraintHorizontal_bias="0.636"
             app:layout_constraintStart_toEndOf="@+id/btn_signout"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.357"
+            app:strokeColor="#000000" />
+
+        <Button
+            android:id="@+id/btn_add_friend"
+            android:layout_width="99dp"
+            android:layout_height="49dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginBottom="4dp"
+            android:background="@android:color/transparent"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:text="친구 추가"
+            android:textColor="#000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btn_remove_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="31dp"
+            android:layout_marginBottom="4dp"
+            android:background="@android:color/transparent"
+            android:text="친구 삭제"
+            android:textColor="#000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_add_friend" />
+
+        <Button
+            android:id="@+id/btn_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="39dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="4dp"
+            android:background="@android:color/transparent"
+            android:text="알림 설정"
+            android:textColor="#000000"
+            app:icon="@drawable/ic_notifications_black_24dp"
+            app:iconGravity="textEnd"
+            app:iconTint="#000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_remove_friend" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

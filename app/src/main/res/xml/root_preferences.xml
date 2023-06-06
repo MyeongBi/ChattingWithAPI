@@ -1,0 +1,23 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/sync_header">
+
+        <SwitchPreferenceCompat
+            app:key="sync"
+            app:title="@string/sync_title" />
+
+        <SwitchPreferenceCompat
+            app:dependency="sync"
+            app:key="attachment2"
+            app:title="공지사항/시험/과제물"
+            />
+
+        <SwitchPreferenceCompat
+            app:dependency="sync"
+            app:key="attachment4"
+            app:title="캘린더"
+            />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

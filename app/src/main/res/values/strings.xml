@@ -6,4 +6,18 @@
     <string name="title_notifications">Notifications</string>
 
     <string name="msg_not_memo">저장된 메모가 없습니다.</string>
+    <!-- Preference Titles -->
+    <string name="sync_header"></string>
+
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">전체 알림</string>
+    <string name="attachment1_title">메세지 알림</string>
+    <string name="attachment2_title">공지사항/시험/과제물</string>
+    <string name="attachment3_title">시험이나 과제 알림</string>
+    <string name="attachment4_title">캘린더</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
 </resources>

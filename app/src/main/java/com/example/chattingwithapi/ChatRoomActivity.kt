@@ -63,8 +63,8 @@ class ChatRoomActivity : AppCompatActivity() {
         recycler_talks = binding.recyclerMessages
         btn_submit = binding.btnSubmit
         txt_title = binding.txtTItle
-        txt_title.text = opponentUser!!.name ?: ""
-        btn_menu = binding.getnotice
+        txt_title.text = opponentUser.name + "님과의 채팅방"
+        btn_menu = binding.addFriends
     }
 
     fun initializeListener() {   //버튼 클릭 시 리스너 초기화

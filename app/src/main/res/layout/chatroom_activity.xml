@@ -23,15 +23,14 @@
 
         <ImageButton
             android:id="@+id/QuitBtn"
-            android:layout_width="65dp"
-            android:layout_height="61dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
             android:background="@android:drawable/btn_dialog"
             android:contentDescription="TODO"
-            app:layout_constraintBottom_toBottomOf="@+id/txt_TItle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/txt_TItle"
-            app:layout_constraintVertical_bias="0.4" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView2"
@@ -114,16 +113,20 @@
             app:layout_constraintTop_toTopOf="@+id/edt_message" />
 
         <Button
-            android:id="@+id/getnotice"
-            android:layout_width="116dp"
-            android:layout_height="43dp"
-            android:text="Button"
+            android:id="@+id/add_friends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:icon="@drawable/ic_baseline_add_24"
+            app:iconGravity="textStart"
+            app:iconSize="40dp"
+            app:iconTint="#000000"
             app:layout_constraintBottom_toTopOf="@+id/divider_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.913"
+            app:layout_constraintHorizontal_bias="0.94"
             app:layout_constraintStart_toEndOf="@+id/QuitBtn"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.205" />
+            app:layout_constraintVertical_bias="0.772" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_messages"
@@ -140,22 +143,6 @@
             tools:listitem="@layout/list_talk_item_mine">
 
         </androidx.recyclerview.widget.RecyclerView>
-
-        <LinearLayout
-            android:id="@+id/menubar"
-            android:layout_width="305dp"
-            android:layout_height="669dp"
-            android:layout_marginStart="68dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/recycler_messages"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            tools:context=".AddFriendDialog">
-
-        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
