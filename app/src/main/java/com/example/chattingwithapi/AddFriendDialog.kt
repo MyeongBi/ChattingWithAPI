@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase
 class AddFriendDialogFragment(private val chatRoomId: String): DialogFragment() {
     private lateinit var binding: AddfriendActivityBinding
     private lateinit var recyclerPeople: RecyclerView
+    private lateinit var recyclerFriends: RecyclerView
     private lateinit var findPeople: EditText
     private lateinit var btnExit: Button
     private lateinit var firebaseDatabase: DatabaseReference
@@ -85,29 +86,45 @@ class AddFriendDialogFragment(private val chatRoomId: String): DialogFragment() 
             }
         })
 
+
     }
     private fun addFriend(user: User) {
         val myUid = FirebaseAuth.getInstance().currentUser?.uid
         val friendUid = user.uid
 
-        // 현재 사용자의 친구 목록에 선택한 사용자를 추가
-        val friendRef =
-            myUid?.let { FirebaseDatabase.getInstance().getReference("User").child("users").child(it).child("friends") }
+        val context = context
+        if (context != null && myUid != null && friendUid != null) {
+            val currentUserRef = FirebaseDatabase.getInstance().getReference("User")
+                .child("users")
+                .child(myUid)
+            val friendRef = FirebaseDatabase.getInstance().getReference("User")
+                .child("users")
+                .child(friendUid)
 
-        if (friendUid != null) {
-            friendRef?.child(friendUid)?.setValue(true)?.addOnSuccessListener {
-                // 친구 추가 성공
-                // 여기서 필요한 UI 업데이트를 수행하거나 사용자에게 알림을 표시할 수 있습니다.
-                Toast.makeText(requireContext(), "친구 추가 성공", Toast.LENGTH_SHORT).show()
-            }?.addOnFailureListener { error ->
-                // 친구 추가 실패
-                // 실패 처리에 대한 로직을 추가할 수 있습니다.
-                Toast.makeText(requireContext(), "친구 추가 실패", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            Toast.makeText(requireContext(), "친구 추가 실패", Toast.LENGTH_SHORT).show()
+            // 내 정보에서 친구 UID 추가
+            currentUserRef.child("friends").child(friendUid).setValue(true)
+                .addOnSuccessListener {
+                    // 친구 추가 성공
+                    Toast.makeText(context, "친구 추가 성공", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { error ->
+                    // 친구 추가 실패
+                    Toast.makeText(context, "친구 추가 실패", Toast.LENGTH_SHORT).show()
+                }
+
+            // 친구 정보에서 내 UID 추가
+            friendRef.child("friends").child(myUid).setValue(true)
+                .addOnSuccessListener {
+                    // 친구 추가 성공
+                    // 여기서 필요한 UI 업데이트를 수행하거나 사용자에게 알림을 표시할 수 있습니다.
+                }
+                .addOnFailureListener { error ->
+                    // 친구 추가 실패
+                    // 실패 처리에 대한 로직을 추가할 수 있습니다.
+                }
         }
     }
+
 
 
     private fun addUserToChatRoom(user: User) {

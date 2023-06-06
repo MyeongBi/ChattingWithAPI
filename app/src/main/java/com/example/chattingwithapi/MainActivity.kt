@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
         }
         removeFriend.setOnClickListener()
         {
-            val addFriendDialogFragment = AddFriendDialogFragment()
+            val addFriendDialogFragment = RemoveFriendFragment()
             addFriendDialogFragment.show(supportFragmentManager, "addFriendDialog")
         }
         btnSet.setOnClickListener()

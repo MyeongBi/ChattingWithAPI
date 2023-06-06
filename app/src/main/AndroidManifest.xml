@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.NOTIFY" />
 
     <application
         android:allowBackup="true"
@@ -13,11 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChattingWithAPI"
         android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         tools:targetApi="31">
-        <activity
-            android:name=".SettingsActivity"
-            android:exported="false"
-            android:label="@string/sync_title" />
+
+
 
         <service
             android:name=".MyFcmService"
@@ -57,6 +57,12 @@
         <activity
             android:name=".MemoActivity"
             android:exported="true"></activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:label="@string/sync_title">
+        </activity>
+
     </application>
 
 </manifest>
