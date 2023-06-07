@@ -8,62 +8,65 @@ import com.example.chattingwithapi.databinding.ListPersonItemBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
-class RecyclerFriendsAdapter(private val context: Context, private val onRemoveClickListener: (User) -> Unit) : RecyclerView.Adapter<RecyclerFriendsAdapter.ViewHolder>() {
+class RecyclerFriendsAdapter(private val fragment: RemoveFriendFragment) : RecyclerView.Adapter<RecyclerFriendsAdapter.ViewHolder>() {
 
-    private val friends: ArrayList<User> = ArrayList()
+    private val friends: ArrayList<User> = arrayListOf()
     lateinit var currentUser: User
 
     init {
         setupFriendList()
     }
 
-    private fun setupFriendList() { // 친구 목록 불러오기
-        val myUid = FirebaseAuth.getInstance().currentUser?.uid.toString() // 현재 사용자 아이디
-        FirebaseDatabase.getInstance().getReference("User")
-            .child("users")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {
-                }
+    private fun setupFriendList() {
+        val myUid = FirebaseAuth.getInstance().currentUser?.uid.toString()
+        val usersRef = FirebaseDatabase.getInstance().getReference("User").child("users")
 
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    friends.clear()
-                    for (data in snapshot.children) {
-                        val item = data.getValue(User::class.java)
-                        if (item?.uid == myUid) {
-                            currentUser = item!! // 전체 사용자 목록에서 현재 사용자는 제외
-                            continue
+        usersRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val updatedFriends = ArrayList<User>()
+
+                val friendsRef = usersRef.child(myUid).child("friends")
+                friendsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(friendsSnapshot: DataSnapshot) {
+                        for (friendSnapshot in friendsSnapshot.children) {
+                            val friendUid = friendSnapshot.key
+                            val friendUser = friendUid?.let { snapshot.child(it).getValue(User::class.java) }
+                            friendUser?.let {
+                                updatedFriends.add(it)
+                            }
                         }
-                        FirebaseDatabase.getInstance().getReference("User")
-                            .child("friends")
-                            .child(item?.uid!!)
-                            .addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onDataChange(friendsSnapshot: DataSnapshot) {
-                                    val friendList =
-                                        friendsSnapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
-                                    if (friendList?.contains(myUid) == true) {
-                                        friends.add(data.getValue(User::class.java)!!) // 친구 목록에 추가
-                                    }
-                                    notifyDataSetChanged() // 화면 업데이트
-                                }
 
-                                override fun onCancelled(error: DatabaseError) {
-                                }
-                            })
+                        friends.clear()
+                        friends.addAll(updatedFriends)
+
+                        notifyDataSetChanged()
                     }
-                }
-            })
+
+                    override fun onCancelled(error: DatabaseError) {
+                        // 오류 처리
+                    }
+                })
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // 오류 처리
+            }
+        })
     }
 
 
+
+    // Rest of the adapter code...
 
 
     fun removeFriend(user: User) {
         friends.remove(user)
         notifyDataSetChanged()
+        // 친구 제거 시 RemoveFriendFragment에서 처리할 로직 추가 가능
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.list_person_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_person_item, parent, false)
         return ViewHolder(ListPersonItemBinding.bind(view))
     }
 
@@ -112,5 +115,6 @@ class RecyclerFriendsAdapter(private val context: Context, private val onRemoveC
         }
     }
 }
+
 
 

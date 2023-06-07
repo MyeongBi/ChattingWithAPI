@@ -30,7 +30,7 @@ class MyFcmService : FirebaseMessagingService() {
 
     fun sendTokenToServer(token: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.0.98:8000/")
+            .baseUrl("http://192.168.43.136:8000/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

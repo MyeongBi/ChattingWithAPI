@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var firebaseDatabase: DatabaseReference
     lateinit var recycler_chatroom: RecyclerView
     private val TAG: String = MainActivity::class.java.simpleName
-    private val SERVER_URL = "ws://192.168.0.98:8000"
+    private val SERVER_URL = "ws://192.168.43.136:8000"
     private val SOCKET_PATH = "/fcm_server/"
     private var webSocket: WebSocket? = null
 

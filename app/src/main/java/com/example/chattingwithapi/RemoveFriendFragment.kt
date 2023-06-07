@@ -51,11 +51,12 @@ class RemoveFriendFragment(private val friendId: String) : DialogFragment() {
 
     private fun setupRecycler() {
         recyclerFriends.layoutManager = LinearLayoutManager(requireContext())
-        val adapter = RecyclerFriendsAdapter(requireContext()) { user ->
-            user.uid?.let { removeFriend(it) }
-        }
+        adapter = RecyclerFriendsAdapter(this) // 전역 변수에 어댑터 인스턴스 할당
         recyclerFriends.adapter = adapter
     }
+
+
+
 
 
     private fun initializeListener() {
@@ -63,6 +64,8 @@ class RemoveFriendFragment(private val friendId: String) : DialogFragment() {
             dismiss()
         }
     }
+
+
 
 //    private fun fetchFriendList() {
 //        val myUid = FirebaseAuth.getInstance().currentUser?.uid

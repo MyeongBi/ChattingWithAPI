@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -148,51 +149,32 @@ class RecyclerChatRoomsAdapter(val context: Context) :
         }
     }
 
-    fun getLastMessageTimeString(lastTimeString: String): String {           //마지막 메시지가 전송된 시각 구하기
+    fun getLastMessageTimeString(lastTimeString: String): String {
         try {
-            var currentTime = LocalDateTime.now().atZone(TimeZone.getDefault().toZoneId()) //현재 시각
-            var dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+            val currentTime = LocalDateTime.now()
+            val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
 
-            var messageMonth = lastTimeString.substring(4, 6).toInt()                   //마지막 메시지 시각 월,일,시,분
-            var messageDate = lastTimeString.substring(6, 8).toInt()
-            var messageHour = lastTimeString.substring(8, 10).toInt()
-            var messageMinute = lastTimeString.substring(10, 12).toInt()
+            val lastMessageTime = LocalDateTime.parse(lastTimeString, dateTimeFormatter)
 
-            var formattedCurrentTimeString = currentTime.format(dateTimeFormatter)     //현 시각 월,일,시,분
-            var currentMonth = formattedCurrentTimeString.substring(4, 6).toInt()
-            var currentDate = formattedCurrentTimeString.substring(6, 8).toInt()
-            var currentHour = formattedCurrentTimeString.substring(8, 10).toInt()
-            var currentMinute = formattedCurrentTimeString.substring(10, 12).toInt()
+            val monthsAgo = ChronoUnit.MONTHS.between(lastMessageTime, currentTime)
+            val daysAgo = ChronoUnit.DAYS.between(lastMessageTime, currentTime)
+            val hoursAgo = ChronoUnit.HOURS.between(lastMessageTime, currentTime)
+            val minutesAgo = ChronoUnit.MINUTES.between(lastMessageTime, currentTime)
 
-            var monthAgo = currentMonth - messageMonth                           //현 시각과 마지막 메시지 시각과의 차이. 월,일,시,분
-            var dayAgo = currentDate - messageDate
-            var hourAgo = currentHour - messageHour
-            var minuteAgo = currentMinute - messageMinute
-
-            if (monthAgo > 0)                                         //1개월 이상 차이 나는 경우
-                return monthAgo.toString() + "개월 전"
-            else {
-                if (dayAgo > 0) {                                  //1일 이상 차이 나는 경우
-                    if (dayAgo == 1)
-                        return "어제"
-                    else
-                        return dayAgo.toString() + "일 전"
-                } else {
-                    if (hourAgo > 0)
-                        return hourAgo.toString() + "시간 전"     //1시간 이상 차이 나는 경우
-                    else {
-                        if (minuteAgo > 0)                       //1분 이상 차이 나는 경우
-                            return minuteAgo.toString() + "분 전"
-                        else
-                            return "방금"
-                    }
-                }
+            return when {
+                monthsAgo > 0 -> "$monthsAgo 개월 전"
+                daysAgo > 0 -> if (daysAgo.toInt() == 1
+                ) "어제" else "$daysAgo 일 전"
+                hoursAgo > 0 -> "$hoursAgo 시간 전"
+                minutesAgo > 0 -> "$minutesAgo 분 전"
+                else -> "방금"
             }
         } catch (e: Exception) {
             e.printStackTrace()
             return ""
         }
     }
+
 
     override fun getItemCount(): Int {
         return chatRooms.size
